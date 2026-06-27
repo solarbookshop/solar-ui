@@ -1,0 +1,101 @@
+<div class="page-container form-page">
+  <header class="page-header">
+    <div class="header-text">
+      <h1 class="page-title">Edit Book</h1>
+      <p class="page-subtitle">Modify book metadata in the catalog</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button routerLink="/books">
+        <mat-icon>arrow_back</mat-icon> Back to Catalog
+      </button>
+    </div>
+  </header>
+
+  @if (fetching()) {
+    <div class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Retrieving book details...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-card">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h3>Failed to load book details</h3>
+      <p class="error-msg">{{ error() }}</p>
+      <button mat-flat-button color="primary" routerLink="/books">Return to Catalog</button>
+    </div>
+  } @else {
+    <mat-card class="form-card">
+      <mat-card-content>
+        <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="reactive-form">
+          <div class="form-grid">
+            
+            <!-- ISBN (Disabled) -->
+            <mat-form-field appearance="outline" class="grid-span-2">
+              <mat-label>ISBN (Immutable)</mat-label>
+              <input matInput formControlName="isbn" id="bookIsbn" />
+              <mat-icon matSuffix>lock</mat-icon>
+              <mat-hint>ISBN cannot be altered after cataloging</mat-hint>
+            </mat-form-field>
+
+            <!-- Title -->
+            <mat-form-field appearance="outline" class="grid-span-2">
+              <mat-label>Book Title</mat-label>
+              <input matInput formControlName="title" placeholder="e.g., Design Patterns" id="bookTitle" />
+              <mat-icon matSuffix>title</mat-icon>
+              @if (bookForm.get('title')?.hasError('required')) {
+                <mat-error>Title is required</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Author -->
+            <mat-form-field appearance="outline">
+              <mat-label>Author</mat-label>
+              <input matInput formControlName="author" placeholder="e.g., Erich Gamma" id="bookAuthor" />
+              <mat-icon matSuffix>person</mat-icon>
+              @if (bookForm.get('author')?.hasError('required')) {
+                <mat-error>Author is required</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Publisher -->
+            <mat-form-field appearance="outline">
+              <mat-label>Publisher (Optional)</mat-label>
+              <input matInput formControlName="publisher" placeholder="e.g., Addison-Wesley" id="bookPublisher" />
+              <mat-icon matSuffix>business</mat-icon>
+            </mat-form-field>
+
+
+
+            <!-- Price -->
+            <mat-form-field appearance="outline">
+              <mat-label>Price (USD)</mat-label>
+              <input type="number" step="0.01" matInput formControlName="price" placeholder="e.g., 29.99" id="bookPrice" />
+              <span matPrefix class="currency-prefix">$</span>
+              @if (bookForm.get('price')?.hasError('required')) {
+                <mat-error>Price is required</mat-error>
+              }
+              @if (bookForm.get('price')?.hasError('min')) {
+                <mat-error>Price must be greater than 0</mat-error>
+              }
+            </mat-form-field>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="button" mat-stroked-button routerLink="/books" [disabled]="loading()">Cancel</button>
+            <button type="submit" mat-flat-button color="primary" [disabled]="bookForm.invalid || loading()">
+              @if (loading()) {
+                <span class="btn-spinner">Saving...</span>
+              } @else {
+                <span class="btn-content">
+                  <mat-icon>save</mat-icon>
+                  <span>Save Changes</span>
+                </span>
+              }
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

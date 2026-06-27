@@ -1,0 +1,65 @@
+.form-page {
+  max-width: 700px !important;
+
+  .form-card {
+    margin-top: 1rem;
+
+    .reactive-form {
+      padding: 1rem 0.5rem;
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+
+        .grid-span-2 {
+          grid-column: span 2;
+        }
+
+        .currency-prefix {
+          margin-right: 4px;
+          color: var(--text-muted);
+          font-weight: 500;
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+
+        .btn-spinner {
+          display: inline-flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .form-page {
+    .form-card {
+      .reactive-form {
+        .form-grid {
+          grid-template-columns: 1fr;
+
+          .grid-span-2 {
+            grid-column: span 1;
+          }
+        }
+
+        .form-actions {
+          flex-direction: column-reverse;
+
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,1 +1,109 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Theme and Design System - Simple, Modern, and Lean */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-family: 'Outfit', sans-serif;
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  
+  --primary-color: #4f46e5;
+  --accent-color: #0d9488;
+  --warn-color: #e11d48;
+  --text-muted: #64748b;
+  --transition-smooth: all 0.2s ease-in-out;
+}
+
+body {
+  font-family: var(--font-family) !important;
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Material card styling - simple & modern */
+.mat-mdc-card {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  transition: var(--transition-smooth) !important;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .mat-mdc-card-header {
+    align-items: center;
+  }
+
+  .mat-mdc-card-content {
+    padding: 8px 16px 16px 16px !important;
+    color: #334155 !important;
+  }
+
+  .mat-mdc-card-actions {
+    padding: 8px 16px 16px 16px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+/* Form fields styling */
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Page spacing and layouts */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text-color);
+      letter-spacing: -0.02em;
+    }
+
+    .page-subtitle {
+      color: var(--text-muted);
+      margin: 0.25rem 0 0 0;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+
+
+/* Custom Snack Bar Style overrides */
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #0f172a !important;
+  --mdc-snackbar-supporting-text-color: #f8fafc !important;
+  border-radius: 8px !important;
+}
+
+/* Align icon and text inside buttons */
+.btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  vertical-align: middle;
+  justify-content: center;
+}

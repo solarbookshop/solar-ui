@@ -1,0 +1,112 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-text">
+      <h1 class="page-title">Book Catalog</h1>
+      <p class="page-subtitle">Manage books and submit order requests</p>
+    </div>
+    <div class="header-actions">
+      <button mat-flat-button color="primary" routerLink="/add-book" class="add-book-btn">
+        <mat-icon>add</mat-icon> Add Book
+      </button>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Fetching book catalog...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-card">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h3>Connection Issue</h3>
+      <p class="error-msg">{{ error() }}</p>
+      <div class="error-actions">
+        <button mat-flat-button color="primary" (click)="loadBooks()" class="retry-btn">
+          <mat-icon>refresh</mat-icon> Retry Connection
+        </button>
+      </div>
+    </div>
+  } @else if (books().length === 0) {
+    <div class="empty-card">
+      <mat-icon class="empty-icon">menu_book</mat-icon>
+      <h3>No Books Available</h3>
+      <p>No books are currently registered in the catalog.</p>
+      <button mat-flat-button color="primary" routerLink="/add-book">Add First Book</button>
+    </div>
+  } @else {
+    <div class="books-grid">
+      @for (book of books(); track book.isbn) {
+        <mat-card class="book-card" [class.ordering-active]="activeOrderBook() === book.isbn">
+          <mat-card-header>
+            <div class="book-title-group">
+              <mat-card-title class="book-title" [matTooltip]="book.title">{{ book.title }}</mat-card-title>
+              <mat-card-subtitle class="book-author">by {{ book.author }}</mat-card-subtitle>
+            </div>
+            <div class="book-price">{{ book.price | currency }}</div>
+          </mat-card-header>
+
+          <mat-card-content class="book-card-content">
+            <div class="meta-grid">
+              <div class="book-meta-item">
+                <span class="meta-label">ISBN</span>
+                <span class="meta-value">{{ book.isbn }}</span>
+              </div>
+              <div class="book-meta-item">
+                <span class="meta-label">Publisher</span>
+                <span class="meta-value">{{ book.publisher || 'N/A' }}</span>
+              </div>
+            </div>
+
+            @if (activeOrderBook() === book.isbn) {
+              <div class="order-overlay" (click)="$event.stopPropagation()">
+                <div class="order-overlay-title">Select Quantity</div>
+                <div class="order-row">
+                  <mat-form-field appearance="outline" class="qty-field">
+                    <mat-select [value]="getQuantity(book.isbn)" (selectionChange)="setQuantity(book.isbn, $event.value)">
+                      <mat-option [value]="1">1 unit</mat-option>
+                      <mat-option [value]="2">2 units</mat-option>
+                      <mat-option [value]="3">3 units</mat-option>
+                      <mat-option [value]="4">4 units</mat-option>
+                      <mat-option [value]="5">5 units</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="order-submit-btn"
+                    (click)="placeOrder(book)"
+                    [disabled]="orderingIsbn() === book.isbn"
+                  >
+                    @if (orderingIsbn() === book.isbn) {
+                      <mat-spinner diameter="18"></mat-spinner>
+                    } @else {
+                      Buy ({{ (book.price * getQuantity(book.isbn)) | currency }})
+                    }
+                  </button>
+                </div>
+                <button mat-button class="cancel-order-btn" (click)="closeOrderForm()" [disabled]="orderingIsbn() === book.isbn">
+                  Cancel
+                </button>
+              </div>
+            }
+          </mat-card-content>
+
+          <mat-card-actions class="book-card-actions">
+            <button mat-flat-button color="primary" (click)="openOrderForm(book.isbn)" class="buy-btn" [disabled]="activeOrderBook() === book.isbn">
+              <mat-icon>shopping_cart</mat-icon> Buy Now
+            </button>
+            <div class="admin-actions">
+              <a mat-icon-button [routerLink]="['/edit-book', book.isbn]" aria-label="Edit book details" matTooltip="Edit Book">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button mat-icon-button color="warn" (click)="confirmDelete(book)" aria-label="Remove book from catalog" matTooltip="Delete Book">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

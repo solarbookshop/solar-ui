@@ -1,0 +1,96 @@
+<div class="page-container form-page">
+  <header class="page-header">
+    <div class="header-text">
+      <h1 class="page-title">Add New Book</h1>
+      <p class="page-subtitle">Publish a new title into the catalog</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button routerLink="/books">
+        <mat-icon>arrow_back</mat-icon> Back to Catalog
+      </button>
+    </div>
+  </header>
+
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="reactive-form">
+        <div class="form-grid">
+          
+          <!-- ISBN -->
+          <mat-form-field appearance="outline" class="grid-span-2">
+            <mat-label>ISBN</mat-label>
+            <input matInput formControlName="isbn" placeholder="e.g., 9783161484100" id="bookIsbn" />
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-hint>10 or 13 digit identifier</mat-hint>
+            @if (bookForm.get('isbn')?.hasError('required')) {
+              <mat-error>ISBN is required</mat-error>
+            }
+            @if (bookForm.get('isbn')?.hasError('pattern')) {
+              <mat-error>ISBN must be a valid 10 or 13 digit number</mat-error>
+            }
+            @if (bookForm.get('isbn')?.hasError('isbnExists')) {
+              <mat-error>A book with this ISBN already exists</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Title -->
+          <mat-form-field appearance="outline" class="grid-span-2">
+            <mat-label>Book Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g., Design Patterns" id="bookTitle" />
+            <mat-icon matSuffix>title</mat-icon>
+            @if (bookForm.get('title')?.hasError('required')) {
+              <mat-error>Title is required</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Author -->
+          <mat-form-field appearance="outline">
+            <mat-label>Author</mat-label>
+            <input matInput formControlName="author" placeholder="e.g., Erich Gamma" id="bookAuthor" />
+            <mat-icon matSuffix>person</mat-icon>
+            @if (bookForm.get('author')?.hasError('required')) {
+              <mat-error>Author is required</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Publisher -->
+          <mat-form-field appearance="outline">
+            <mat-label>Publisher (Optional)</mat-label>
+            <input matInput formControlName="publisher" placeholder="e.g., Addison-Wesley" id="bookPublisher" />
+            <mat-icon matSuffix>business</mat-icon>
+          </mat-form-field>
+
+
+
+          <!-- Price -->
+          <mat-form-field appearance="outline">
+            <mat-label>Price (USD)</mat-label>
+            <input type="number" step="0.01" matInput formControlName="price" placeholder="e.g., 29.99" id="bookPrice" />
+            <span matPrefix class="currency-prefix">$</span>
+            @if (bookForm.get('price')?.hasError('required')) {
+              <mat-error>Price is required</mat-error>
+            }
+            @if (bookForm.get('price')?.hasError('min')) {
+              <mat-error>Price must be greater than 0</mat-error>
+            }
+          </mat-form-field>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="button" mat-stroked-button routerLink="/books" [disabled]="loading()">Cancel</button>
+          <button type="submit" mat-flat-button color="primary" [disabled]="bookForm.invalid || loading()">
+            @if (loading()) {
+              <span class="btn-spinner">Saving...</span>
+            } @else {
+              <span class="btn-content">
+                <mat-icon>save</mat-icon>
+                <span>Catalog Book</span>
+              </span>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,6 +1,27 @@
-<main>
-  <h1>Hello, {{ title() }}</h1>
-  <p>Congratulations! Your app is running. 🎉</p>
-</main>
+<div class="app-shell">
+  <nav class="app-navbar" aria-label="Main Navigation">
+    <a routerLink="/" class="logo-group">
+      <div class="logo-icon">S</div>
+      <span class="logo-text">{{ title() }}</span>
+    </a>
 
-<router-outlet />
+    <div class="nav-links">
+      <a routerLink="/books" routerLinkActive="active" class="nav-link">
+        <mat-icon>menu_book</mat-icon>
+        <span>Catalog</span>
+      </a>
+      <a routerLink="/add-book" routerLinkActive="active" class="nav-link">
+        <mat-icon>add_box</mat-icon>
+        <span>Add Book</span>
+      </a>
+      <a routerLink="/orders" routerLinkActive="active" class="nav-link">
+        <mat-icon>receipt</mat-icon>
+        <span>Orders</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="app-main-content">
+    <router-outlet />
+  </main>
+</div>
