@@ -63,9 +63,9 @@ jobs:
       - name: Package SPA
         run: |
           pack build ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
-            --buildpack gcr.io/paketo-buildpacks/nginx \
-            --builder paketobuildpacks/builder:base \
-            -p dist
+            --buildpack paketo-buildpacks/nginx \
+            --builder paketobuildpacks/ubuntu-noble-builder \
+            --path dist
       - name: OCI image vulnerability scanning
         uses: anchore/scan-action@v7
         id: scan
