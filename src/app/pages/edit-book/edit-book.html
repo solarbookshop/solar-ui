@@ -5,7 +5,7 @@
       <p class="page-subtitle">Modify book metadata in the catalog</p>
     </div>
     <div class="header-actions">
-      <button mat-stroked-button routerLink="/books">
+      <button mat-stroked-button routerLink="/get-books">
         <mat-icon>arrow_back</mat-icon> Back to Catalog
       </button>
     </div>
@@ -21,7 +21,7 @@
       <mat-icon class="error-icon">error_outline</mat-icon>
       <h3>Failed to load book details</h3>
       <p class="error-msg">{{ error() }}</p>
-      <button mat-flat-button color="primary" routerLink="/books">Return to Catalog</button>
+      <button mat-flat-button color="primary" routerLink="/get-books">Return to Catalog</button>
     </div>
   } @else {
     <mat-card class="form-card">
@@ -82,7 +82,7 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" mat-stroked-button routerLink="/books" [disabled]="loading()">Cancel</button>
+            <button type="button" mat-stroked-button routerLink="/get-books" [disabled]="loading()">Cancel</button>
             <button type="submit" mat-flat-button color="primary" [disabled]="bookForm.invalid || loading()">
               @if (loading()) {
                 <span class="btn-spinner">Saving...</span>

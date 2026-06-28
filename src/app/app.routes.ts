@@ -3,11 +3,11 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'books',
+    redirectTo: 'get-books',
     pathMatch: 'full'
   },
   {
-    path: 'books',
+    path: 'get-books',
     loadComponent: () => import('./pages/books/books').then(m => m.BooksComponent)
   },
   {
@@ -19,11 +19,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/edit-book/edit-book').then(m => m.EditBookComponent)
   },
   {
-    path: 'orders',
+    path: 'get-orders',
     loadComponent: () => import('./pages/orders/orders').then(m => m.OrdersComponent)
   },
   {
     path: '**',
-    redirectTo: 'books'
+    redirectTo: 'get-books'
   }
 ];

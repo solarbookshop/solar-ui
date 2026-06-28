@@ -2,22 +2,49 @@
   <nav class="app-navbar" aria-label="Main Navigation">
     <a routerLink="/" class="logo-group">
       <div class="logo-icon">S</div>
-      <span class="logo-text">{{ title() }}</span>
     </a>
 
     <div class="nav-links">
-      <a routerLink="/books" routerLinkActive="active" class="nav-link">
+      <a routerLink="/get-books" routerLinkActive="active" class="nav-link">
         <mat-icon>menu_book</mat-icon>
         <span>Catalog</span>
       </a>
-      <a routerLink="/add-book" routerLinkActive="active" class="nav-link">
-        <mat-icon>add_box</mat-icon>
-        <span>Add Book</span>
-      </a>
-      <a routerLink="/orders" routerLinkActive="active" class="nav-link">
-        <mat-icon>receipt</mat-icon>
-        <span>Orders</span>
-      </a>
+      @if (currentUser()) {
+        <a routerLink="/add-book" routerLinkActive="active" class="nav-link">
+          <mat-icon>add_box</mat-icon>
+          <span>Add Book</span>
+        </a>
+        <a routerLink="/get-orders" routerLinkActive="active" class="nav-link">
+          <mat-icon>receipt</mat-icon>
+          <span>Orders</span>
+        </a>
+      }
+    </div>
+
+    <div class="auth-section">
+      @if (currentUser(); as user) {
+        <div class="user-profile">
+          <div class="user-avatar" [title]="user.username">
+            {{ getUserInitials(user) }}
+          </div>
+          <div class="user-details">
+            <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+            <span class="user-role">{{ getDisplayRole(user) }}</span>
+          </div>
+          <form action="/logout" method="POST" class="logout-form">
+            <input type="hidden" name="_csrf" [value]="authService.getCsrfToken()">
+            <button type="submit" mat-stroked-button class="logout-btn">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </button>
+          </form>
+        </div>
+      } @else {
+        <button mat-flat-button color="primary" class="login-btn" (click)="authService.login()">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </button>
+      }
     </div>
   </nav>
 

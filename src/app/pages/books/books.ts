@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Book } from '../../../types';
 import { BookService } from '../../services/book.service';
 import { OrderService } from '../../services/order.service';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'solar-books',
@@ -36,6 +37,7 @@ import { OrderService } from '../../services/order.service';
 export class BooksComponent implements OnInit {
   protected readonly bookService = inject(BookService);
   protected readonly orderService = inject(OrderService);
+  protected readonly authService = inject(AuthService);
   private readonly snackBar = inject(MatSnackBar);
 
   // Component local state signals

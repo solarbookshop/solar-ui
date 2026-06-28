@@ -97,7 +97,7 @@ export class EditBookComponent implements OnInit {
         this.snackBar.open(`"${book.title}" updated successfully!`, 'OK', {
           duration: 3000,
         });
-        this.router.navigate(['/books']);
+        this.router.navigate(['/get-books']);
       },
       error: (err) => {
         this.loading.set(false);

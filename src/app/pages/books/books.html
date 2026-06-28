@@ -4,11 +4,13 @@
       <h1 class="page-title">Book Catalog</h1>
       <p class="page-subtitle">Manage books and submit order requests</p>
     </div>
-    <div class="header-actions">
-      <button mat-flat-button color="primary" routerLink="/add-book" class="add-book-btn">
-        <mat-icon>add</mat-icon> Add Book
-      </button>
-    </div>
+    @if (authService.currentUser()) {
+      <div class="header-actions">
+        <button mat-flat-button color="primary" routerLink="/add-book" class="add-book-btn">
+          <mat-icon>add</mat-icon> Add Book
+        </button>
+      </div>
+    }
   </header>
 
   @if (loading()) {
@@ -32,7 +34,9 @@
       <mat-icon class="empty-icon">menu_book</mat-icon>
       <h3>No Books Available</h3>
       <p>No books are currently registered in the catalog.</p>
-      <button mat-flat-button color="primary" routerLink="/add-book">Add First Book</button>
+      @if (authService.currentUser()) {
+        <button mat-flat-button color="primary" routerLink="/add-book">Add First Book</button>
+      }
     </div>
   } @else {
     <div class="books-grid">
@@ -92,19 +96,21 @@
             }
           </mat-card-content>
 
-          <mat-card-actions class="book-card-actions">
-            <button mat-flat-button color="primary" (click)="openOrderForm(book.isbn)" class="buy-btn" [disabled]="activeOrderBook() === book.isbn">
-              <mat-icon>shopping_cart</mat-icon> Buy Now
-            </button>
-            <div class="admin-actions">
-              <a mat-icon-button [routerLink]="['/edit-book', book.isbn]" aria-label="Edit book details" matTooltip="Edit Book">
-                <mat-icon>edit</mat-icon>
-              </a>
-              <button mat-icon-button color="warn" (click)="confirmDelete(book)" aria-label="Remove book from catalog" matTooltip="Delete Book">
-                <mat-icon>delete</mat-icon>
+          @if (authService.currentUser()) {
+            <mat-card-actions class="book-card-actions">
+              <button mat-flat-button color="primary" (click)="openOrderForm(book.isbn)" class="buy-btn" [disabled]="activeOrderBook() === book.isbn">
+                <mat-icon>shopping_cart</mat-icon> Buy Now
               </button>
-            </div>
-          </mat-card-actions>
+              <div class="admin-actions">
+                <a mat-icon-button [routerLink]="['/edit-book', book.isbn]" aria-label="Edit book details" matTooltip="Edit Book">
+                  <mat-icon>edit</mat-icon>
+                </a>
+                <button mat-icon-button color="warn" (click)="confirmDelete(book)" aria-label="Remove book from catalog" matTooltip="Delete Book">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </mat-card-actions>
+          }
         </mat-card>
       }
     </div>

@@ -64,7 +64,7 @@ export class AddBookComponent {
         this.snackBar.open(`"${addedBook.title}" successfully cataloged!`, 'OK', {
           duration: 3000,
         });
-        this.router.navigate(['/books']);
+        this.router.navigate(['/get-books']);
       },
       error: (err) => {
         this.loading.set(false);
