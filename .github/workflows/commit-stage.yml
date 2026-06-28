@@ -55,7 +55,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v6
       - name: Set up Pack CLI
-        uses: buildpacks/github-actions/setup-pack@v5
+        uses: buildpacks/github-actions/setup-pack@v5.12.5
       - name: Build SPA
         run: |
           chmod +x gradlew
