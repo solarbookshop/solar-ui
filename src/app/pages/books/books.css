@@ -22,6 +22,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    .book-title-link {
+      color: inherit;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+
+      &:hover {
+        color: var(--primary-color);
+        text-decoration: underline;
+      }
+    }
   }
 
   .book-author {
@@ -125,6 +136,33 @@
   }
 
   .book-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .details-btn {
+      color: var(--text-muted) !important;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        margin-right: 4px;
+      }
+
+      &:hover {
+        color: var(--primary-color) !important;
+        background-color: rgba(79, 70, 229, 0.05);
+      }
+    }
+
+    .right-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .admin-actions {
       display: flex;
       gap: 0.25rem;

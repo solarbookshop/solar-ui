@@ -24,7 +24,6 @@ import { User } from '../types';
 })
 export class App implements OnInit {
   protected readonly authService = inject(AuthService);
-  protected readonly currentUser = this.authService.currentUser;
 
   ngOnInit(): void {
     this.checkAuthentication();
@@ -52,7 +51,19 @@ export class App implements OnInit {
     if (!user.roles || user.roles.length === 0) {
       return 'User';
     }
-    const role = user.roles[0];
-    return role.replace('ROLE_', '').toLowerCase().replace(/^\w/, (c) => c.toUpperCase());
+    if (user.roles.includes('employee')) {
+      return 'Employee';
+    }
+    if (user.roles.includes('customer')) {
+      return 'Customer';
+    }
+    const displayRole = user.roles.find(r => 
+      !['offline_access', 'uma_authorization'].includes(r) && 
+      !r.startsWith('default-roles')
+    );
+    if (displayRole) {
+      return displayRole.toLowerCase().replace(/^\w/, (c) => c.toUpperCase());
+    }
+    return 'User';
   }
 }

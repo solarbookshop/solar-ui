@@ -29,7 +29,7 @@ import { Book } from '../../../types';
   templateUrl: './edit-book.html',
   styleUrls: ['./edit-book.css'],
 })
-export class EditBookComponent implements OnInit {
+export class EditBook implements OnInit {
   // Bound from route: /edit-book/:isbn
   isbn = input.required<string>();
 

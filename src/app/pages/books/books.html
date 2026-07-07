@@ -4,7 +4,7 @@
       <h1 class="page-title">Book Catalog</h1>
       <p class="page-subtitle">Manage books and submit order requests</p>
     </div>
-    @if (authService.currentUser()) {
+    @if (authService.isEmployee()) {
       <div class="header-actions">
         <button mat-flat-button color="primary" routerLink="/add-book" class="add-book-btn">
           <mat-icon>add</mat-icon> Add Book
@@ -44,7 +44,9 @@
         <mat-card class="book-card" [class.ordering-active]="activeOrderBook() === book.isbn">
           <mat-card-header>
             <div class="book-title-group">
-              <mat-card-title class="book-title" [matTooltip]="book.title">{{ book.title }}</mat-card-title>
+              <mat-card-title class="book-title" [matTooltip]="book.title">
+                <a [routerLink]="['/get-books', book.isbn]" class="book-title-link">{{ book.title }}</a>
+              </mat-card-title>
               <mat-card-subtitle class="book-author">by {{ book.author }}</mat-card-subtitle>
             </div>
             <div class="book-price">{{ book.price | currency }}</div>
@@ -96,21 +98,28 @@
             }
           </mat-card-content>
 
-          @if (authService.currentUser()) {
-            <mat-card-actions class="book-card-actions">
-              <button mat-flat-button color="primary" (click)="openOrderForm(book.isbn)" class="buy-btn" [disabled]="activeOrderBook() === book.isbn">
-                <mat-icon>shopping_cart</mat-icon> Buy Now
-              </button>
-              <div class="admin-actions">
-                <a mat-icon-button [routerLink]="['/edit-book', book.isbn]" aria-label="Edit book details" matTooltip="Edit Book">
-                  <mat-icon>edit</mat-icon>
-                </a>
-                <button mat-icon-button color="warn" (click)="confirmDelete(book)" aria-label="Remove book from catalog" matTooltip="Delete Book">
-                  <mat-icon>delete</mat-icon>
+          <mat-card-actions class="book-card-actions">
+            <a mat-button [routerLink]="['/get-books', book.isbn]" class="details-btn">
+              <mat-icon>info</mat-icon> Details
+            </a>
+            <div class="right-actions-group">
+              @if (authService.currentUser()) {
+                <button mat-flat-button color="primary" (click)="openOrderForm(book.isbn)" class="buy-btn" [disabled]="activeOrderBook() === book.isbn">
+                  <mat-icon>shopping_cart</mat-icon> Buy Now
                 </button>
-              </div>
-            </mat-card-actions>
-          }
+              }
+              @if (authService.isEmployee()) {
+                <div class="admin-actions">
+                  <a mat-icon-button [routerLink]="['/edit-book', book.isbn]" aria-label="Edit book details" matTooltip="Edit Book">
+                    <mat-icon>edit</mat-icon>
+                  </a>
+                  <button mat-icon-button color="warn" (click)="confirmDelete(book)" aria-label="Remove book from catalog" matTooltip="Delete Book">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          </mat-card-actions>
         </mat-card>
       }
     </div>

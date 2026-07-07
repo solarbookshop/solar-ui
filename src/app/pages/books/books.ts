@@ -34,7 +34,7 @@ import { AuthService } from '../../services/auth-service';
   templateUrl: './books.html',
   styleUrls: ['./books.css'],
 })
-export class BooksComponent implements OnInit {
+export class Books implements OnInit {
   protected readonly bookService = inject(BookService);
   protected readonly orderService = inject(OrderService);
   protected readonly authService = inject(AuthService);

@@ -26,7 +26,7 @@ import { BookService } from '../../services/book.service';
   templateUrl: './add-book.html',
   styleUrls: ['./add-book.css'],
 })
-export class AddBookComponent {
+export class AddBook {
   private readonly fb = inject(FormBuilder);
   private readonly bookService = inject(BookService);
   private readonly router = inject(Router);

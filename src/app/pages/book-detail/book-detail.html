@@ -1,0 +1,146 @@
+<div class="page-container">
+  <div class="detail-navigation">
+    <a mat-button routerLink="/get-books" class="back-link">
+      <mat-icon>arrow_back</mat-icon> Back to Catalog
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading book details...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-card">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h3>Failed to Load Book</h3>
+      <p class="error-msg">{{ error() }}</p>
+      <div class="error-actions">
+        <a mat-flat-button color="primary" routerLink="/get-books">
+          <mat-icon>arrow_back</mat-icon> Back to Catalog
+        </a>
+      </div>
+    </div>
+  } @else if (book(); as bookDetails) {
+    <div class="detail-layout">
+      <!-- Book Cover Visual -->
+      <div class="cover-column">
+        <div class="book-cover-container">
+          <div class="book-cover-mockup">
+            <div class="book-spine"></div>
+            <div class="book-cover-content">
+              <div class="book-cover-logo">Solar</div>
+              <div class="book-cover-title">{{ bookDetails.title }}</div>
+              <div class="book-cover-author">by {{ bookDetails.author }}</div>
+            </div>
+            <div class="book-glare"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Book Info & Actions -->
+      <div class="info-column">
+        <mat-card class="detail-card">
+          <mat-card-header class="detail-card-header">
+            <div class="title-section">
+              <h1 class="book-title">{{ bookDetails.title }}</h1>
+              <p class="book-author">by {{ bookDetails.author }}</p>
+            </div>
+            <div class="price-section">
+              <span class="price-value">{{ bookDetails.price | currency }}</span>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="detail-card-content">
+            <div class="specs-grid">
+              <div class="spec-item">
+                <span class="spec-label">ISBN</span>
+                <span class="spec-value code-font">
+                  {{ bookDetails.isbn }}
+                  <button mat-icon-button (click)="copyIsbn()" matTooltip="Copy ISBN" aria-label="Copy ISBN" class="copy-btn">
+                    <mat-icon class="small-icon">content_copy</mat-icon>
+                  </button>
+                </span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label">Publisher</span>
+                <span class="spec-value">{{ bookDetails.publisher || 'N/A' }}</span>
+              </div>
+            </div>
+
+            <div class="book-description">
+              <h3>About this book</h3>
+              <p>
+                Explore this wonderful piece of literature by <strong>{{ bookDetails.author }}</strong>.
+                Published by <strong>{{ bookDetails.publisher || 'N/A' }}</strong>, this book is a must-have addition to your collection.
+                Dive into the details and place an order to get your hands on this classic copy today!
+              </p>
+            </div>
+
+            <hr class="divider" />
+
+            <!-- Order Block -->
+            <div class="order-block">
+              @if (authService.currentUser()) {
+                <div class="order-section-title">
+                  <mat-icon>shopping_cart</mat-icon> Place an Order
+                </div>
+                <div class="order-controls">
+                  <div class="qty-selector-group">
+                    <span class="qty-label">Quantity:</span>
+                    <mat-form-field appearance="outline" class="qty-dropdown">
+                      <mat-select [value]="quantity()" (selectionChange)="quantity.set($event.value)">
+                        <mat-option [value]="1">1 copy</mat-option>
+                        <mat-option [value]="2">2 copies</mat-option>
+                        <mat-option [value]="3">3 copies</mat-option>
+                        <mat-option [value]="4">4 copies</mat-option>
+                        <mat-option [value]="5">5 copies</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="order-summary-row">
+                    <div class="total-price">
+                      <span class="total-label">Total:</span>
+                      <span class="total-value">{{ (bookDetails.price * quantity()) | currency }}</span>
+                    </div>
+
+                    <button
+                      mat-flat-button
+                      color="primary"
+                      class="place-order-btn"
+                      (click)="placeOrder()"
+                      [disabled]="ordering()"
+                    >
+                      @if (ordering()) {
+                        <span class="btn-content">
+                          <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+                          <span>Placing...</span>
+                        </span>
+                      } @else {
+                        <span class="btn-content">
+                          <mat-icon>shopping_bag</mat-icon> Place Order
+                        </span>
+                      }
+                    </button>
+                  </div>
+                </div>
+              } @else {
+                <div class="auth-required-box">
+                  <mat-icon class="lock-icon">lock_outline</mat-icon>
+                  <div class="auth-message">
+                    <h4>Ordering requires authentication</h4>
+                    <p>Log in with your user account to submit an order request for this book.</p>
+                  </div>
+                  <button mat-flat-button color="primary" class="login-btn-detail" (click)="authService.login()">
+                    <mat-icon>login</mat-icon> Log In to Order
+                  </button>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+</div>

@@ -9,11 +9,13 @@
         <mat-icon>menu_book</mat-icon>
         <span>Catalog</span>
       </a>
-      @if (currentUser()) {
+      @if (authService.isEmployee()) {
         <a routerLink="/add-book" routerLinkActive="active" class="nav-link">
           <mat-icon>add_box</mat-icon>
           <span>Add Book</span>
         </a>
+      }
+      @if (authService.currentUser()) {
         <a routerLink="/get-orders" routerLinkActive="active" class="nav-link">
           <mat-icon>receipt</mat-icon>
           <span>Orders</span>
@@ -22,7 +24,7 @@
     </div>
 
     <div class="auth-section">
-      @if (currentUser(); as user) {
+      @if (authService.currentUser(); as user) {
         <div class="user-profile">
           <div class="user-avatar" [title]="user.username">
             {{ getUserInitials(user) }}
