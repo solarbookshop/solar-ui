@@ -19,7 +19,7 @@ Build an NGINX container using the Pack CLI and Paketo buildpacks.
 ```shell
 pack build solar-ui \
   --buildpack paketo-buildpacks/nginx \
-  --builder paketobuildpacks/ubuntu-noble-builder \
+  --builder paketobuildpacks/ubuntu-resolute-builder:latest \
   --path dist \
   --pull-policy if-not-present
 ```
