@@ -1,12 +1,16 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
-import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { AuthService } from './services/auth-service';
 import { User } from '../types';
+import { UserProfileDialog } from './components/user-profile-dialog/user-profile-dialog';
 
 @Component({
   selector: 'solar-root',
@@ -18,18 +22,23 @@ import { User } from '../types';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatMenuModule,
+    MatDividerModule,
+    MatDialogModule,
+    MatTooltipModule,
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
 export class App implements OnInit {
   protected readonly authService = inject(AuthService);
+  private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.checkAuthentication();
   }
 
-  private checkAuthentication(): void {
+  protected checkAuthentication(): void {
     this.authService.authenticate().subscribe({
       next: (user) => {
         this.authService.currentUser.set(user);
@@ -41,29 +50,12 @@ export class App implements OnInit {
     });
   }
 
-  protected getUserInitials(user: User): string {
-    const first = user.firstName ? user.firstName.charAt(0) : '';
-    const last = user.lastName ? user.lastName.charAt(0) : '';
-    return (first + last).toUpperCase() || user.username.charAt(0).toUpperCase() || 'U';
-  }
-
-  protected getDisplayRole(user: User): string {
-    if (!user.roles || user.roles.length === 0) {
-      return 'User';
-    }
-    if (user.roles.includes('employee')) {
-      return 'Employee';
-    }
-    if (user.roles.includes('customer')) {
-      return 'Customer';
-    }
-    const displayRole = user.roles.find(r => 
-      !['offline_access', 'uma_authorization'].includes(r) && 
-      !r.startsWith('default-roles')
-    );
-    if (displayRole) {
-      return displayRole.toLowerCase().replace(/^\w/, (c) => c.toUpperCase());
-    }
-    return 'User';
+  protected openUserProfile(): void {
+    this.dialog.open(UserProfileDialog, {
+      width: '520px',
+      maxWidth: '95vw',
+      panelClass: 'user-profile-dialog-panel',
+      data: this.authService.currentUser(),
+    });
   }
 }

@@ -28,7 +28,7 @@ export interface OrderRequest {
 }
 
 export interface User {
-    id: string;
+    id?: string;
     username: string;
     firstName: string;
     lastName: string;

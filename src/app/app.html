@@ -25,22 +25,77 @@
 
     <div class="auth-section">
       @if (authService.currentUser(); as user) {
-        <div class="user-profile">
-          <div class="user-avatar" [title]="user.username">
-            {{ getUserInitials(user) }}
+        <div class="user-profile-widget">
+          <!-- Clickable Avatar: directly calls /user and opens inspector -->
+          <button
+            type="button"
+            class="user-avatar-btn"
+            (click)="openUserProfile()"
+            matTooltip="Click avatar to inspect /user profile"
+            matTooltipPosition="below"
+            aria-label="View user details from /user endpoint"
+          >
+            <div class="user-avatar">
+              {{ authService.getUserInitials(user) }}
+            </div>
+          </button>
+
+          <!-- Dropdown Trigger with Name & Role Badge -->
+          <button
+            type="button"
+            class="user-menu-trigger"
+            [matMenuTriggerFor]="userMenu"
+            aria-label="Open user menu"
+          >
+            <div class="user-details">
+              <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span class="user-role-badge" [ngClass]="user.roles?.includes('employee') ? 'role-employee' : 'role-customer'">
+                {{ authService.getDisplayRole(user) }}
+              </span>
+            </div>
+            <mat-icon class="dropdown-chevron">expand_more</mat-icon>
+          </button>
+        </div>
+
+        <!-- Mat Menu for User Profile & Actions -->
+        <mat-menu #userMenu="matMenu" xPosition="before" class="user-dropdown-menu">
+          <!-- Menu Header Card -->
+          <div class="menu-user-card" (click)="openUserProfile()">
+            <div class="menu-avatar">
+              {{ authService.getUserInitials(user) }}
+            </div>
+            <div class="menu-user-info">
+              <span class="menu-user-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span class="menu-user-handle">&#64;{{ user.username }}</span>
+              <span class="menu-badge">{{ authService.getDisplayRole(user) }}</span>
+            </div>
           </div>
-          <div class="user-details">
-            <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-            <span class="user-role">{{ getDisplayRole(user) }}</span>
-          </div>
-          <form action="/logout" method="POST" class="logout-form">
+
+          <mat-divider></mat-divider>
+
+          <!-- Inspect /user Endpoint Action -->
+          <button mat-menu-item (click)="openUserProfile()">
+            <mat-icon class="menu-icon-accent">badge</mat-icon>
+            <span>Account Details (/user)</span>
+          </button>
+
+          <!-- Refresh Session via /user -->
+          <button mat-menu-item (click)="checkAuthentication()">
+            <mat-icon>sync</mat-icon>
+            <span>Sync Session (/user)</span>
+          </button>
+
+          <mat-divider></mat-divider>
+
+          <!-- Logout Action via CSRF POST form -->
+          <form action="/logout" method="POST" class="menu-logout-form">
             <input type="hidden" name="_csrf" [value]="authService.getCsrfToken()">
-            <button type="submit" mat-stroked-button class="logout-btn">
-              <mat-icon>logout</mat-icon>
-              <span>Logout</span>
+            <button type="submit" mat-menu-item class="menu-logout-btn">
+              <mat-icon class="logout-icon">logout</mat-icon>
+              <span>Log out</span>
             </button>
           </form>
-        </div>
+        </mat-menu>
       } @else {
         <button mat-flat-button color="primary" class="login-btn" (click)="authService.login()">
           <mat-icon>login</mat-icon>

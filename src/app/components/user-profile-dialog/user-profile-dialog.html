@@ -1,0 +1,126 @@
+<div class="profile-dialog-container">
+  <!-- Dialog Header -->
+  <div class="dialog-header">
+    <div class="header-title-group">
+      <div class="endpoint-pill">
+        <mat-icon>api</mat-icon>
+        <span>GET /user</span>
+      </div>
+      <h2>User Profile & Session</h2>
+    </div>
+    <button mat-icon-button class="close-btn" (click)="close()" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Content -->
+  <div class="dialog-content">
+    @if (loading() && !user()) {
+      <div class="loading-state">
+        <mat-spinner diameter="44"></mat-spinner>
+        <p>Connecting to Edge Service /user endpoint...</p>
+      </div>
+    } @else if (user(); as u) {
+      <!-- Hero Profile Section -->
+      <div class="profile-hero">
+        <div class="avatar-large">
+          {{ authService.getUserInitials(u) }}
+        </div>
+        <div class="hero-info">
+          <h3 class="hero-name">{{ u.firstName }} {{ u.lastName }}</h3>
+          <span class="hero-username">&#64;{{ u.username }}</span>
+          <div class="auth-source-badge">
+            <span class="pulse-dot"></span>
+            <span>Authenticated via Keycloak OIDC</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Identity Details Grid -->
+      <div class="details-card">
+        <h4 class="section-title">
+          <mat-icon>badge</mat-icon>
+          <span>Claim Information</span>
+        </h4>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Preferred Username</span>
+            <span class="info-value">{{ u.username }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">First Name</span>
+            <span class="info-value">{{ u.firstName || '—' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Last Name</span>
+            <span class="info-value">{{ u.lastName || '—' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Identity Provider</span>
+            <span class="info-value">Keycloak (SolarBookshop realm)</span>
+          </div>
+        </div>
+
+        <!-- Assigned Roles Section -->
+        <div class="roles-section">
+          <span class="info-label">Assigned Roles & Privileges</span>
+          <div class="role-chips">
+            @for (role of u.roles; track role) {
+              <span class="role-badge" [ngClass]="getRoleBadgeClass(role)">
+                <mat-icon class="badge-icon">
+                  {{ role === 'employee' ? 'work' : (role === 'customer' ? 'shopping_bag' : 'verified_user') }}
+                </mat-icon>
+                <span>{{ role }}</span>
+              </span>
+            } @empty {
+              <span class="no-roles">No explicit roles assigned</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Live /user Endpoint Inspector -->
+      <div class="raw-response-card">
+        <div class="raw-header" (click)="toggleRawJson()">
+          <div class="raw-title">
+            <mat-icon>code</mat-icon>
+            <span>Live /user Response Payload</span>
+          </div>
+          <button mat-icon-button type="button" class="expand-btn">
+            <mat-icon>{{ rawJsonVisible() ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </div>
+
+        @if (rawJsonVisible()) {
+          <div class="json-viewer">
+            <pre><code>{{ u | json }}</code></pre>
+          </div>
+        }
+      </div>
+
+      @if (lastFetchedTime(); as time) {
+        <div class="sync-status">
+          <mat-icon>sync</mat-icon>
+          <span>Last synced: {{ time | date:'mediumTime' }}</span>
+        </div>
+      }
+    } @else {
+      <div class="error-state">
+        <mat-icon color="warn">error_outline</mat-icon>
+        <p>No active user session found on the /user endpoint.</p>
+      </div>
+    }
+  </div>
+
+  <!-- Dialog Footer Actions -->
+  <div class="dialog-actions">
+    <button mat-stroked-button class="refresh-btn" (click)="refreshUserProfile()" [disabled]="loading()">
+      <mat-icon [class.spin-anim]="loading()">refresh</mat-icon>
+      <span>{{ loading() ? 'Fetching...' : 'Re-fetch /user' }}</span>
+    </button>
+    <button mat-flat-button color="primary" class="done-btn" (click)="close()">
+      <span>Done</span>
+    </button>
+  </div>
+</div>
